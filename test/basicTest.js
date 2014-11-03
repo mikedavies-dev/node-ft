@@ -170,5 +170,16 @@ describe("basic", function() {
             var ids2 = ftIndex.search("this more");
             expect(ids2.length).to.equal(1);
         });
+
+        it ("should return a document ID when indexed and searched with two word search", function () {
+
+            var ftIndex= require('../node-ft');
+
+            ftIndex.index('1', "this is some text");
+            ftIndex.index('2', "this is some more text");
+
+            var ids2 = ftIndex.search("this more");
+            expect(ids2.length).to.equal(1);
+        });
     });
 });
