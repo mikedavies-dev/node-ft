@@ -1,4 +1,4 @@
-Node-FT Full-Text Search engine for NodeJS
+Full-Text Search engine for NodeJS
 =======
 
 Node-FT adds basic in-memory Full-Text search capabilities to NodeJS
