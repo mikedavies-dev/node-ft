@@ -4,7 +4,7 @@ describe("basic", function() {
     describe("create node ft engine", function() {
         it("should return an instance of the NodeFT engine", function(){
 
-            var ftEngine = require('../nodeft');
+            var ftEngine = require('../node-ft');
 
             expect(ftEngine).not.to.be.null;
         });
@@ -14,7 +14,7 @@ describe("basic", function() {
 
         it("should accept some text to index and check document count", function(){
 
-            var ftEngine = require('../nodeft');
+            var ftEngine = require('../node-ft');
 
             ftEngine.index('1', 'this is some text to index');
 
@@ -24,7 +24,7 @@ describe("basic", function() {
 
         it("it should index the text and store a reference to the document ID internally", function(){
 
-            var ftEngine = require('../nodeft');
+            var ftEngine = require('../node-ft');
 
             ftEngine.index('1', 'this is some text to index');
 
@@ -35,13 +35,11 @@ describe("basic", function() {
         });
     });
 
-
-
     describe("create a splitter object and perform some basic splitting", function() {
 
         it("should split some text into a basic array", function(){
 
-            var splitter = require('../nodeft');
+            var splitter = require('../node-ft');
 
             splitter.setDelimiter();
 
@@ -52,7 +50,7 @@ describe("basic", function() {
 
         it("should split override the default ' ' delimiter", function(){
 
-            var splitter = require('../nodeft');
+            var splitter = require('../node-ft');
 
             // create some test text
             var textText = "this,is,some,basic,text";
@@ -73,7 +71,7 @@ describe("basic", function() {
 
         it("should process multiple delimiters", function(){
 
-            var splitter = require('../nodeft');
+            var splitter = require('../node-ft');
 
             // create some test text
             var textText = "this is some basic text with you're";
@@ -89,7 +87,7 @@ describe("basic", function() {
 
         it("should process multiple delimiters (more complex)", function(){
 
-            var splitter = require('../nodeft');
+            var splitter = require('../node-ft');
 
             // create some test text
             var textText = "1,2'3,4'5,6";
@@ -105,7 +103,7 @@ describe("basic", function() {
 
         it("should reset delimiter back to default", function(){
 
-            var splitter = require('../nodeft');
+            var splitter = require('../node-ft');
 
             splitter.setDelimiter(",");
 
@@ -122,7 +120,7 @@ describe("basic", function() {
 
         it("should return all lower case if setIgnoreCase(true)", function(){
 
-            var splitter = require('../nodeft');
+            var splitter = require('../node-ft');
 
             splitter.setDelimiter();
             splitter.setIgnoreCase(true);
@@ -135,7 +133,7 @@ describe("basic", function() {
 
         it("should remove duplicates", function(){
 
-            var splitter = require('../nodeft');
+            var splitter = require('../node-ft');
 
             splitter.setDelimiter();
 
@@ -150,7 +148,7 @@ describe("basic", function() {
 
         it ("should return a document ID when indexed and searched with one word search", function () {
 
-            var ftIndex= require('../nodeft');
+            var ftIndex= require('../node-ft');
 
             ftIndex.index('1', "this is some text");
             ftIndex.index('2', "this is some more text");
@@ -164,7 +162,7 @@ describe("basic", function() {
 
         it ("should return a document ID when indexed and searched with two word search", function () {
 
-            var ftIndex= require('../nodeft');
+            var ftIndex= require('../node-ft');
 
             ftIndex.index('1', "this is some text");
             ftIndex.index('2', "this is some more text");
