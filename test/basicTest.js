@@ -1,45 +1,31 @@
 var expect = require("chai").expect;
 
+var newEngine = function () {
+    var ftEngine = require('../node-ft');
+
+    ftEngine.clear();
+    ftEngine.setDelimiter();
+
+    return ftEngine;
+}
+
 describe("basic", function() {
     describe("create node ft engine", function() {
         it("should return an instance of the NodeFT engine", function(){
 
-            var ftEngine = require('../node-ft');
+            var ftEngine = newEngine();
 
             expect(ftEngine).not.to.be.null;
         });
     });
 
-    describe("index a basic document", function() {
 
-        it("should accept some text to index and check document count", function(){
-
-            var ftEngine = require('../node-ft');
-
-            ftEngine.index('1', 'this is some text to index');
-
-            // we should have one document in the system
-            expect(ftEngine.count()).to.equal(1);
-        });
-
-        it("it should index the text and store a reference to the document ID internally", function(){
-
-            var ftEngine = require('../node-ft');
-
-            ftEngine.index('1', 'this is some text to index');
-
-            // we should have one document in the system
-            var lookup = ftEngine.lookup('this');
-
-            expect(lookup.documents[0]).to.equal('1');
-        });
-    });
 
     describe("create a splitter object and perform some basic splitting", function() {
 
         it("should split some text into a basic array", function(){
 
-            var splitter = require('../node-ft');
+            var splitter = newEngine();
 
             splitter.setDelimiter();
 
@@ -50,7 +36,7 @@ describe("basic", function() {
 
         it("should split override the default ' ' delimiter", function(){
 
-            var splitter = require('../node-ft');
+            var splitter = newEngine();
 
             // create some test text
             var textText = "this,is,some,basic,text";
@@ -71,7 +57,7 @@ describe("basic", function() {
 
         it("should process multiple delimiters", function(){
 
-            var splitter = require('../node-ft');
+            var splitter = newEngine();
 
             // create some test text
             var textText = "this is some basic text with you're";
@@ -87,7 +73,7 @@ describe("basic", function() {
 
         it("should process multiple delimiters (more complex)", function(){
 
-            var splitter = require('../node-ft');
+            var splitter = newEngine();
 
             // create some test text
             var textText = "1,2'3,4'5,6";
@@ -103,7 +89,7 @@ describe("basic", function() {
 
         it("should reset delimiter back to default", function(){
 
-            var splitter = require('../node-ft');
+            var splitter = newEngine();
 
             splitter.setDelimiter(",");
 
@@ -120,7 +106,7 @@ describe("basic", function() {
 
         it("should return all lower case if setIgnoreCase(true)", function(){
 
-            var splitter = require('../node-ft');
+            var splitter = newEngine();
 
             splitter.setDelimiter();
             splitter.setIgnoreCase(true);
@@ -133,7 +119,7 @@ describe("basic", function() {
 
         it("should remove duplicates", function(){
 
-            var splitter = require('../node-ft');
+            var splitter = newEngine();
 
             splitter.setDelimiter();
 
@@ -144,11 +130,77 @@ describe("basic", function() {
         });
     });
 
+    describe("index a basic document", function() {
+
+        it("should accept some text to index and check document count", function(){
+
+            var ftEngine = newEngine();
+
+            ftEngine.index('1', 'this is some text to index');
+            ftEngine.index('2', 'this is some text to index');
+
+            // we should have one document in the system
+            expect(ftEngine.count()).to.equal(2);
+        });
+
+        it("it should index the text and store a reference to the document ID internally", function(){
+
+            var ftEngine = newEngine();
+
+            ftEngine.clear();
+
+            ftEngine.index('1', 'this is some text to index');
+
+            // we should have one document in the system
+            var lookup = ftEngine.lookup('this');
+
+            expect(lookup.documents[0]).to.equal('1');
+        });
+    });
+
+    describe("misc functions on the search index", function() {
+
+        it("should accept some text to index and check document count", function(){
+
+            var ftEngine = newEngine();
+
+            ftEngine.index('1', 'this is some text to index');
+            ftEngine.index('2', 'this is some text to index');
+
+            ftEngine.clear();
+
+            // we should have one document in the system
+            expect(ftEngine.count()).to.equal(0);
+        });
+
+        it("should overwrite an existing document", function(){
+
+            var ftEngine = newEngine();
+
+            ftEngine.index('1', 'this is some text to index');
+            ftEngine.index('1', 'this is some text to index');
+
+            // we should have one document in the system
+            expect(ftEngine.count()).to.equal(1);
+        });
+
+        it("should delete a document from the index", function(){
+
+            var ftEngine = newEngine();
+
+            ftEngine.index('1', 'this is some text to index');
+            ftEngine.delete('1');
+
+            // we should have one document in the system
+            expect(ftEngine.count()).to.equal(0);
+        });
+    });
+
     describe("test the search features of the index", function() {
 
         it ("should return a document ID when indexed and searched with one word search", function () {
 
-            var ftIndex= require('../node-ft');
+            var ftIndex= newEngine();
 
             ftIndex.index('1', "this is some text");
             ftIndex.index('2', "this is some more text");
@@ -162,7 +214,7 @@ describe("basic", function() {
 
         it ("should return a document ID when indexed and searched with two word search", function () {
 
-            var ftIndex= require('../node-ft');
+            var ftIndex= newEngine();
 
             ftIndex.index('1', "this is some text");
             ftIndex.index('2', "this is some more text");
@@ -173,7 +225,7 @@ describe("basic", function() {
 
         it ("should return a document ID when indexed and searched with two word search", function () {
 
-            var ftIndex= require('../node-ft');
+            var ftIndex= newEngine();
 
             ftIndex.index('1', "this is some text");
             ftIndex.index('2', "this is some more text");

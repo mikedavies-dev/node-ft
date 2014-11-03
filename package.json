@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "dependencies": {
     "chai": "^1.9.2",
+    "readline-sync": "^0.4.9",
+    "string": "^2.2.0",
     "underscore": "^1.7.0"
   }
 }

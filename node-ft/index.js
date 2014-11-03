@@ -1,5 +1,7 @@
 (function (module) {
 
+    var _ = require('underscore');
+
     var _delimiter = new RegExp("[ ]+");
 
     // internal words storage
@@ -7,9 +9,15 @@
 
     // should we ignore the case of the text?
     var _ignoreCase = false;
+
+    var _documents = {};
     
     module.index= function (id, text) {
 
+        // attempt to delete any existing document
+        this.delete(id);
+
+        // split the input text into parts
         var parts = module.splitText(text);
 
         parts.forEach(function (item) {
@@ -22,11 +30,41 @@
             if (_parts[item].documents.indexOf(id) === -1)
                 _parts[item].documents.push(id);
         });
+
+        _documents[id]= {
+            text: text
+        };
+    }
+
+    module.delete = function (id) {
+
+        if (_documents[id] == null)
+            return;
+
+        // get the document
+        var doc = _documents[id];
+
+        // remove from the parts
+        var parts = module.splitText(doc.text);
+
+        parts.forEach(function (item) {
+
+            if (_parts[item] == null)
+                return;
+
+            if (_.indexOf(_parts[item].documents, id) !== -1) {
+
+                _parts[item].documents = _.without(
+                    _parts[item].documents,
+                    _.findWhere(_parts[item].documents, id));
+            }
+        });
+
+        // remove from the object
+        delete _documents[id];
     }
 
     module.search = function(text) {
-
-        var _ = require('underscore');
 
         // get the parts
         var parts = module.splitText(text);
@@ -65,7 +103,12 @@
     }
 
     module.count = function () {
-        return 1;
+        return _.size(_documents);
+    }
+
+    module.clear = function () {
+        _parts = {};
+        _documents= {};
     }
 
     module.setDelimiter = function(delimiter) {
