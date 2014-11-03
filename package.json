@@ -1,4 +1,8 @@
 {
   "name": "nodeft",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "dependencies": {
+    "chai": "^1.9.2",
+    "underscore": "^1.7.0"
+  }
 }

@@ -1,0 +1,17 @@
+index logic
+
+    Split the text by the delimiter(s)
+    Remove any ignored words
+    lookup each word in the hash
+    add a document id to the hash
+
+search logic
+
+    1) Create a test (that fails)
+    2) Make it pass (little code as possible)
+    3) Refactor code
+
+TODO:
+
+    Choose naming convention (parts or words?)
+    Change forEach and indexOf to underscore
