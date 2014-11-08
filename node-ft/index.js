@@ -11,7 +11,8 @@
     var _ignoreCase = false;
 
     var _documents = {};
-    
+
+
     module.index= function (id, text) {
 
         // attempt to delete any existing document
