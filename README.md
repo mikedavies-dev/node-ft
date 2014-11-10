@@ -12,7 +12,7 @@ var ftIndex= require('./node-ft');
 ftIndex.index('1', "this is some text");
 ftIndex.index('2', "this is some more text");
 
-var documentIds = ftIndex.search("this");
+var docs = ftIndex.search("this");
 ```
 
 Document storage
@@ -25,9 +25,9 @@ ftIndex.index('1', "this is some text",
     some: 'this is a doc' 
 });
 
-var documentIds = ftIndex.search("this");
+var docs = ftIndex.search("this");
 
-console.log(documentIds[0].doc.value);
+console.log(docs[0].doc.value);
 
 ```
 
@@ -35,7 +35,7 @@ Sort Results
 
 ```javascript
 
-var documentIds = ftIndex.search("this", function(result) {
+var docs = ftIndex.search("this", function(result) {
     return result.doc.sort;
 });
 ```
@@ -52,7 +52,7 @@ OR expressions
 
 ```javascript
 
-var documentIds = ftIndex.search("this or that", function(result) {
+var docs = ftIndex.search("this or that", function(result) {
     return result.doc.sort;
 });
 
@@ -62,7 +62,7 @@ Nested Expressions
 
 ```javascript
 
-var documentIds = ftIndex.search("this or (that and other)", function(result) {
+var docs = ftIndex.search("this or (that and other)", function(result) {
     return result.doc.sort;
 });
 
