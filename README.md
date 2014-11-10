@@ -81,3 +81,11 @@ var docs = ftIndex.search("this or (that and other)", function(result) {
 
 ```
 
+Clear Index
+
+```javascript
+
+ftIndex.clear();
+
+```
+
