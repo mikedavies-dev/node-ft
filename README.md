@@ -6,7 +6,7 @@ Node-FT adds basic in-memory Full-Text search capabilities to Node. Supporting:
 - Document Indexing
 - Results Sorting
 - <strong>AND</strong> / <strong>OR</strong> Operations
-- Nested Expresions: <strong>"First and (whole or world or (another word))"</strong>
+- Nested Expresions: ```First and (whole or world or (another word))```
 
 =======
 
