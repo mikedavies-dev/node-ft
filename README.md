@@ -18,21 +18,22 @@ var documentIds = ftIndex.search("this");
 Document storage
 
 ```javascript
-var ftIndex= require('./node-ft');
 
-ftIndex.index('1', "this is some text", { some: 'this is a doc' });
-ftIndex.index('2', "this is some more text", { some: 'this is a doc' });
+ftIndex.index('1', "this is some text", 
+{ 
+    value: 12,
+    some: 'this is a doc' 
+});
 
 var documentIds = ftIndex.search("this");
+
+console.log(documentIds[0].doc.value);
+
 ```
 
 Sort Results
 
 ```javascript
-var ftIndex= require('./node-ft');
-
-ftIndex.index('1', "this is some text", { some: 'this is a doc', sort: 9 });
-ftIndex.index('2', "this is some more text", { some: 'this is a doc', sort: 8 });
 
 var documentIds = ftIndex.search("this", function(result) {
     return result.doc.sort;
@@ -42,11 +43,28 @@ var documentIds = ftIndex.search("this", function(result) {
 Delete Document
 
 ```javascript
-var ftIndex= require('./node-ft');
-
-ftIndex.index('1', "this is some text");
-ftIndex.index('2', "this is some more text");
 
 ftIndex.delete('2');
 
 ```
+
+OR expressions
+
+```javascript
+
+var documentIds = ftIndex.search("this or that", function(result) {
+    return result.doc.sort;
+});
+
+```
+
+Nested Expressions
+
+```javascript
+
+var documentIds = ftIndex.search("this or (that and other)", function(result) {
+    return result.doc.sort;
+});
+
+```
+
