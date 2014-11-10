@@ -89,3 +89,11 @@ ftIndex.clear();
 
 ```
 
+Get Document Count
+
+```javascript
+
+var docCount = ftIndex.count();
+
+```
+
