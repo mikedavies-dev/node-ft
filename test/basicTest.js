@@ -479,6 +479,18 @@ describe("basic", function() {
 
             expect(tokenizer.eof()).to.equal(true);
         });
+
+        it("ignore non whitespace/token chars", function () {
+
+            var tokenizer = require('../Parser').newTokenizer("@or = 'this");
+
+            expect(tokenizer.eof()).to.equal(false);
+
+            expect(tokenizer.next().value).to.equal("or");
+            expect(tokenizer.next().value).to.equal("this");
+            
+            expect(tokenizer.eof()).to.equal(true);
+        });
     });
 
     describe("node-ft.Parser", function() {
