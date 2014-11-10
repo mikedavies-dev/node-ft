@@ -147,6 +147,24 @@ var Parser = function (input) {
         return this._parse(0);
     }
 
+    this.split = function () {
+
+        var ret = [];
+
+        while (!_input.eof()) {
+
+            var token = _input.next();
+
+            switch (token.type) {
+                case "word":
+                    ret.push(token.value);
+                    break;
+            }
+        }
+
+        return ret;
+    }
+
     this._parse = function (level) {
 
         if (_input.eof())

@@ -24,7 +24,7 @@
             case "index":
 
                 if (command.length < 3) {
-                    console.log("example: \n  index 'docId', 'document text'");
+                    console.log("example: \n  index 'docId' 'document text'");
                     continue;
                 }
 
@@ -46,7 +46,7 @@
                 var ids = engine.search(command[1]);
 
                 _.each(ids, function (id) {
-                    console.log("docId: " + id);
+                    console.log("docId: " + JSON.stringify(id));
                 })
 
                 break;

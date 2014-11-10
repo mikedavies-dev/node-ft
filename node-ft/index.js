@@ -1,25 +1,30 @@
 (function (module) {
 
     var _ = require('underscore');
-
-    var _delimiter = new RegExp("[ ]+");
+    var _parser = require('./Parser');
 
     // internal words storage
     var _parts = {};
 
     // should we ignore the case of the text?
-    var _ignoreCase = false;
+    var _ignoreCase = true;
 
     var _documents = {};
 
-
-    module.index= function (id, text) {
+    module.index= function (id, text, document) {
 
         // attempt to delete any existing document
         this.delete(id);
 
+        if (_ignoreCase)
+            text = text.toLowerCase();
+
+        var parser = _parser.newParser(text);
+
         // split the input text into parts
-        var parts = module.splitText(text);
+        var parts = parser.split();
+
+        var words = [];
 
         parts.forEach(function (item) {
 
@@ -28,12 +33,17 @@
                     documents: []
                 };
 
-            if (_parts[item].documents.indexOf(id) === -1)
+            if (_.indexOf(words, item) == -1)
+                words.push(item);
+
+            if (_.indexOf(_parts[item].documents, id) === -1)
                 _parts[item].documents.push(id);
         });
 
         _documents[id]= {
-            text: text
+            /*text: text,*/
+            words: words,
+            doc: document
         };
     }
 
@@ -45,10 +55,7 @@
         // get the document
         var doc = _documents[id];
 
-        // remove from the parts
-        var parts = module.splitText(doc.text);
-
-        parts.forEach(function (item) {
+        doc.words.forEach(function (item) {
 
             if (_parts[item] == null)
                 return;
@@ -65,30 +72,79 @@
         delete _documents[id];
     }
 
-    module.search = function(text) {
+    module.execOperatorNode = function (node) {
 
-        // get the parts
-        var parts = module.splitText(text);
+        var left = this.execNode(node.left);
+        var right = [];
 
-        var ids = [];
+        // do we need to calculate right?
+        if (left.length > 0 || node.value == "or")
+            right = this.execNode(node.right);
 
-        _.each(parts, function(lookup, index) {
+        switch  (node.value) {
+            case "or":
+                return _.union(left, right);
 
-            // get the part
-            var part = module.lookup(lookup);
+            case "and":
+                return _.intersection(left, right);
+        }
+    }
 
-            // make sure we have a result
-            if (part == null)
-                return;
+    module.execNode = function (node) {
 
-            if (index == 0)
-                ids = _.clone(part.documents);
-            else {
-                ids = _.intersection(ids, part.documents);
-            }
-        });
+        switch  (node.type) {
+            case "word":
 
-        return ids;
+                // get the part
+                var part = this.lookup(node.value);
+
+                // make sure we have a result
+                if (part == null)
+                    return [];
+
+                return _.clone(part.documents);
+
+            case "operator":
+                return this.execOperatorNode(node);
+
+            case "group":
+                return this.execNode(node.exp);
+
+            default :
+                return [];
+           }
+    }
+
+    module.search = function(text, sortBy) {
+
+        if (_ignoreCase)
+            text = text.toLowerCase();
+
+        // create the parser & parse
+        var parser =_parser.newParser(text);
+
+        var ats = parser.parse(text);
+
+        // exec the top level node
+        var docs= this.execNode(ats);
+
+        var ret = [];
+
+        _.forEach(docs, function (val, index) {
+
+            var doc = _documents[val];
+
+            ret.push({
+                id: val,
+                doc: doc.doc
+            });
+        })
+
+        if (sortBy) {
+            ret = _.sortBy(ret, sortBy);
+        }
+
+        return ret;
     }
 
     module.lookup = function (part) {
@@ -111,40 +167,5 @@
         _parts = {};
         _documents= {};
     }
-
-    module.setDelimiter = function(delimiter) {
-
-        var params = Array.prototype.join.call(arguments, "");
-
-        if (params.length == 0)
-            params = " ";
-
-        var regexString = "[" + params + "]+";
-
-        // create the regex object
-        _delimiter = new RegExp(regexString);
-    };
-
-    module.splitText= function (text) {
-
-        if (_ignoreCase)
-            text = text.toLowerCase();
-
-        var result = [];
-
-        // split the values
-        var parts= text.split(_delimiter);
-
-        // remove the duplicates
-        parts.forEach(function (part) {
-
-            if (result.indexOf(part) != -1)
-                return;
-
-            result.push(part);
-        })
-
-        return result;
-    };
 
 })(module.exports);

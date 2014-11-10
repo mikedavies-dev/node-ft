@@ -1,10 +1,10 @@
 var expect = require("chai").expect;
+var _ = require('underscore');
 
 var newEngine = function () {
     var ftEngine = require('../node-ft');
 
     ftEngine.clear();
-    ftEngine.setDelimiter();
 
     return ftEngine;
 }
@@ -16,117 +16,6 @@ describe("basic", function() {
             var ftEngine = newEngine();
 
             expect(ftEngine).not.to.be.null;
-        });
-    });
-
-
-
-    describe("create a splitter object and perform some basic splitting", function() {
-
-        it("should split some text into a basic array", function(){
-
-            var splitter = newEngine();
-
-            splitter.setDelimiter();
-
-            var words = splitter.splitText("this is some basic text");
-
-            expect(words.length).to.equal(5);
-        });
-
-        it("should split override the default ' ' delimiter", function(){
-
-            var splitter = newEngine();
-
-            // create some test text
-            var textText = "this,is,some,basic,text";
-
-            // split with default delimiter
-            var words1 = splitter.splitText(textText);
-
-            expect(words1.length).to.equal(1);
-
-            // set the new delimiter
-            splitter.setDelimiter(",");
-
-            // split with new delimiter
-            var words2 = splitter.splitText(textText);
-
-            expect(words2.length).to.equal(5);
-        });
-
-        it("should process multiple delimiters", function(){
-
-            var splitter = newEngine();
-
-            // create some test text
-            var textText = "this is some basic text with you're";
-
-            // set the new delimiter
-            splitter.setDelimiter("\\s", "'");
-
-            // split with new delimiter
-            var words = splitter.splitText(textText);
-
-            expect(words.length).to.equal(8);
-        });
-
-        it("should process multiple delimiters (more complex)", function(){
-
-            var splitter = newEngine();
-
-            // create some test text
-            var textText = "1,2'3,4'5,6";
-
-            // set the new delimiter
-            splitter.setDelimiter(",", "'");
-
-            // split with new delimiter
-            var words = splitter.splitText(textText);
-
-            expect(words.length).to.equal(6);
-        });
-
-        it("should reset delimiter back to default", function(){
-
-            var splitter = newEngine();
-
-            splitter.setDelimiter(",");
-
-            var words = splitter.splitText("this,is,some");
-            expect(words.length).to.equal(3);
-
-            // set the delimiter back to default
-            splitter.setDelimiter();
-
-            var words = splitter.splitText("this is some");
-
-            expect(words.length).to.equal(3);
-        });
-
-        it("should return all lower case if setIgnoreCase(true)", function(){
-
-            var splitter = newEngine();
-
-            splitter.setDelimiter();
-            splitter.setIgnoreCase(true);
-
-            var words = splitter.splitText("this is SOME Basic text");
-
-            expect(words.length).to.equal(5);
-            expect(words[2]).to.equal("some");
-        });
-
-        it("should remove duplicates", function(){
-
-            var splitter = newEngine();
-
-            splitter.setDelimiter();
-
-            var words = splitter.splitText("this is some text this text has duplicates");
-
-            expect(words.length).to.equal(6);
-
         });
     });
 
@@ -198,7 +87,7 @@ describe("basic", function() {
 
     describe("test the search features of the index", function() {
 
-        it ("should return a document ID when indexed and searched with one word search", function () {
+        it ("search for a document matching a single word", function () {
 
             var ftIndex= newEngine();
 
@@ -212,7 +101,7 @@ describe("basic", function() {
             expect(ids2.length).to.equal(1);
         });
 
-        it ("should return a document ID when indexed and searched with two word search", function () {
+        it ("search for a document matching two words", function () {
 
             var ftIndex= newEngine();
 
@@ -223,33 +112,163 @@ describe("basic", function() {
             expect(ids2.length).to.equal(1);
         });
 
-        it ("should return a document ID when indexed and searched with two word search", function () {
+        it ("confirm setIgnoreCase(true) works", function () {
 
             var ftIndex= newEngine();
 
-            ftIndex.index('1', "this is some text");
-            ftIndex.index('2', "this is some more text");
+            ftIndex.setIgnoreCase(true);
+            ftIndex.index('1', "this is SOME text");
+            ftIndex.index('2', "this is more text");
 
-            var ids2 = ftIndex.search("this more");
+            var ids2 = ftIndex.search("Some");
             expect(ids2.length).to.equal(1);
         });
 
+        it ("confirm setIgnoreCase(false) works", function () {
+
+            var ftIndex= newEngine();
+
+            ftIndex.setIgnoreCase(false);
+            ftIndex.index('1', "this is SOME text");
+            ftIndex.index('2', "this is more text");
+
+            var ids2 = ftIndex.search("Some");
+            expect(ids2.length).to.equal(0);
+        });
     });
 
     describe("Run more complex search expressions", function() {
 
-        /*
+        it ("should handle the or operator", function () {
+
+            var ftIndex= newEngine();
+
+            ftIndex.index('1', "one two");
+            ftIndex.index('2', "three four");
+            ftIndex.index('3', "five six");
+            ftIndex.index('4', "seven eight");
+
+            var ids2 = ftIndex.search("one or three");
+            expect(ids2.length).to.equal(2);
+        });
+
+        it ("should group with an OR", function () {
+
+            var ftIndex= newEngine();
+
+            ftIndex.index('1', "one two");
+            ftIndex.index('2', "three four");
+            ftIndex.index('3', "five six");
+            ftIndex.index('4', "seven eight");
+
+            var ids2 = ftIndex.search("one or (three and seven)");
+            expect(ids2.length).to.equal(1);
+        });
+
+        it ("should handle and with a group and or", function () {
+
+            var ftIndex= newEngine();
+
+            ftIndex.index('1', "one two");
+            ftIndex.index('2', "three four");
+            ftIndex.index('3', "five six");
+            ftIndex.index('4', "one eight");
+
+            var ids2 = ftIndex.search("one and (two or eight)");
+            expect(ids2.length).to.equal(2);
+        });
+
         it ("should process an OR expression", function () {
             var ftIndex= newEngine();
 
             ftIndex.index('1', "one two three");
             ftIndex.index('2', "four five six");
-            ftIndex.index('3', "seven eight nine");
+            ftIndex.index('3', "seven eight three");
 
             var ids2 = ftIndex.search("one or three");
             expect(ids2.length).to.equal(2);
-        })*/
+        })
+    });
 
+    describe("Store documents in the index", function() {
+
+        it("return documents from the serach call", function () {
+
+            var ftIndex = newEngine();
+
+            var docs = [
+                {
+                    id: '1',
+                    text: 'one two'
+                },
+                {
+                    id: '2',
+                    text: 'three four'
+                },
+                {
+                    id: '3',
+                    text: 'five six'
+                },
+                {
+                    id: '4',
+                    text: 'seven eight'
+                }
+            ];
+
+            _.forEach(docs, function (val) {
+                ftIndex.index(val.id, val.text, val);
+            });
+
+            var ids2 = ftIndex.search("one or three");
+            expect(ids2.length).to.equal(2);
+
+            expect(ids2[0].doc.text).to.equal("one two");
+            expect(ids2[0].doc.id).to.equal('1');
+        });
+    });
+
+    describe("Sort documents on return from search", function() {
+
+        it("Search the documents by text", function () {
+
+            var ftIndex = newEngine();
+
+            var docs = [
+                {
+                    id: '1',
+                    sort: 4,
+                    text: 'one two'
+                },
+                {
+                    id: '2',
+                    sort: 3,
+                    text: 'three four'
+                },
+                {
+                    id: '3',
+                    sort: 77,
+                    text: 'five six'
+                },
+                {
+                    id: '4',
+                    sort: 1,
+                    text: 'seven eight'
+                }
+            ];
+
+            _.forEach(docs, function (val) {
+                ftIndex.index(val.id, val.text, val);
+            });
+
+            var ids2 = ftIndex.search("one or three or seven", function (result) {
+                return result.doc.sort;
+            });
+
+            expect(ids2.length).to.equal(3);
+
+            expect(ids2[0].doc.text).to.equal("seven eight");
+            expect(ids2[0].doc.id).to.equal('4');
+        });
     });
 
     describe("node-ft.InputStream", function() {
@@ -300,7 +319,6 @@ describe("basic", function() {
             expect(stream.eof()).to.be.equal(true);
         })
 
-
         it("col should increment with position", function () {
 
             var stream = require('../node-ft/Parser').newInputStream("this is some text");
@@ -314,7 +332,6 @@ describe("basic", function() {
         it("col should increment with position after new line", function () {
 
             var stream = require('../node-ft/Parser').newInputStream("ok\nok\n");
-
 
             // o
             stream.next();
@@ -587,8 +604,6 @@ describe("basic", function() {
 
             var ast = parser.parse();
 
-            //console.log(JSON.stringify(ast, null, 2));
-
             // top level token should be or
             expect(ast.type).to.equal("word");
             expect(ast.value).to.equal("this");
@@ -599,8 +614,6 @@ describe("basic", function() {
             var parser = require('../node-ft/Parser').newParser("this (or that)");
 
             var ast = parser.parse();
-
-            //console.log(JSON.stringify(ast, null, 2));
 
             // top level token should be or
             expect(ast.type).to.equal("operator");
@@ -622,8 +635,6 @@ describe("basic", function() {
 
             var ast = parser.parse();
 
-            //console.log(JSON.stringify(ast, null, 2));
-
             // top level token should be or
             expect(ast.type).to.equal("operator");
             expect(ast.value).to.equal("and");
@@ -631,19 +642,27 @@ describe("basic", function() {
             expect(ast.right.type).to.equal("operator");
         });
 
-        it ("quotes should be ignored or treated as separators?", function () {
+        it ("more complex expression with multiple and´s and subgroups", function () {
 
             var parser = require('../node-ft/Parser').newParser("this or (one and (three or four or five))");
 
             var ast = parser.parse();
 
-            console.log(JSON.stringify(ast, null, 2));
-
             // top level token should be or
             expect(ast.type).to.equal("operator");
-            expect(ast.value).to.equal("and");
-            expect(ast.left.value).to.equal("you");
-            expect(ast.right.type).to.equal("operator");
+            expect(ast.value).to.equal("or");
+            expect(ast.left.value).to.equal("this");
+            expect(ast.right.type).to.equal("group");
+        });
+
+        it ("Split some text into words for indexing", function () {
+
+            var parser = require('../node-ft/Parser').newParser("this,is some text that's good");
+
+            var words = parser.split();
+
+            // top level token should be or
+            expect(words.length).to.equal(7);
         });
     });
 });
