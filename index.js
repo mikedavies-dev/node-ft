@@ -112,7 +112,7 @@
 
             default :
                 return [];
-           }
+        }
     }
 
     module.search = function(text, sortBy) {

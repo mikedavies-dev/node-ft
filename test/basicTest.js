@@ -2,7 +2,7 @@ var expect = require("chai").expect;
 var _ = require('underscore');
 
 var newEngine = function () {
-    var ftEngine = require('../node-ft');
+    var ftEngine = require('../');
 
     ftEngine.clear();
 
@@ -285,21 +285,21 @@ describe("basic", function() {
 
         it("creates a stream with text data and returns eof() == false", function(){
 
-            var stream = require('../node-ft/Parser').newInputStream("this is some text");
+            var stream = require('../Parser').newInputStream("this is some text");
 
             expect(stream.eof()).to.be.equal(false);
         });
 
         it ("should init with a stream and peek the next char", function () {
 
-            var stream = require('../node-ft/Parser').newInputStream("this is some text");
+            var stream = require('../Parser').newInputStream("this is some text");
 
             expect(stream.peek()).to.equal('t');
         });
 
         it("should init with a stream and return the next char", function () {
 
-            var stream = require('../node-ft/Parser').newInputStream("this is some text");
+            var stream = require('../Parser').newInputStream("this is some text");
 
             expect(stream.next()).to.equal('t');
             expect(stream.next()).to.equal('h');
@@ -309,7 +309,7 @@ describe("basic", function() {
 
         it("should return eof when we hit the end", function () {
 
-            var stream = require('../node-ft/Parser').newInputStream("this");
+            var stream = require('../Parser').newInputStream("this");
 
             expect(stream.next()).to.equal('t');
             expect(stream.next()).to.equal('h');
@@ -321,7 +321,7 @@ describe("basic", function() {
 
         it("col should increment with position", function () {
 
-            var stream = require('../node-ft/Parser').newInputStream("this is some text");
+            var stream = require('../Parser').newInputStream("this is some text");
 
             stream.next();
             stream.next();
@@ -331,7 +331,7 @@ describe("basic", function() {
 
         it("col should increment with position after new line", function () {
 
-            var stream = require('../node-ft/Parser').newInputStream("ok\nok\n");
+            var stream = require('../Parser').newInputStream("ok\nok\n");
 
             // o
             stream.next();
@@ -373,7 +373,7 @@ describe("basic", function() {
 
         it("should correctly detect brackets", function () {
 
-            var tokenizer = require('../node-ft/Parser').newTokenizer();
+            var tokenizer = require('../Parser').newTokenizer();
             expect(tokenizer.isBrackets("(")).to.equal(true);
             expect(tokenizer.isBrackets(")")).to.equal(true);
             expect(tokenizer.isBrackets("d")).to.equal(false);
@@ -381,7 +381,7 @@ describe("basic", function() {
 
         it("should correctly read whitespace chars", function () {
 
-            var tokenizer = require('../node-ft/Parser').newTokenizer();
+            var tokenizer = require('../Parser').newTokenizer();
             expect(tokenizer.isWhitespace(" ")).to.equal(true);
             expect(tokenizer.isWhitespace("\t")).to.equal(true);
             expect(tokenizer.isWhitespace("\n")).to.equal(true);
@@ -389,7 +389,7 @@ describe("basic", function() {
 
         it("should correctly detect isOperator", function () {
 
-            var tokenizer = require('../node-ft/Parser').newTokenizer();
+            var tokenizer = require('../Parser').newTokenizer();
             expect(tokenizer.isOperator("or")).to.equal(true);
             expect(tokenizer.isOperator("and")).to.equal(true);
             expect(tokenizer.isOperator("nokw")).to.equal(false);
@@ -397,7 +397,7 @@ describe("basic", function() {
 
         it("should correctly detect isAlphaNumericWord", function () {
 
-            var tokenizer = require('../node-ft/Parser').newTokenizer();
+            var tokenizer = require('../Parser').newTokenizer();
             expect(tokenizer.isAlphaNumeric("a")).to.equal(true);
             expect(tokenizer.isAlphaNumeric("b")).to.equal(true);
             expect(tokenizer.isAlphaNumeric("=")).to.equal(false);
@@ -405,7 +405,7 @@ describe("basic", function() {
 
         it("should read some brackets", function () {
 
-            var tokenizer = require('../node-ft/Parser').newTokenizer("(");
+            var tokenizer = require('../Parser').newTokenizer("(");
 
             var token = tokenizer.next();
 
@@ -417,7 +417,7 @@ describe("basic", function() {
 
         it("should read an alpha numeric token", function () {
 
-            var tokenizer = require('../node-ft/Parser').newTokenizer("abcde");
+            var tokenizer = require('../Parser').newTokenizer("abcde");
 
             var token = tokenizer.next();
 
@@ -429,7 +429,7 @@ describe("basic", function() {
 
         it("should read an operator", function () {
 
-            var tokenizer = require('../node-ft/Parser').newTokenizer("or");
+            var tokenizer = require('../Parser').newTokenizer("or");
 
             var token = tokenizer.next();
 
@@ -441,7 +441,7 @@ describe("basic", function() {
 
         it("should read an operator in upper case", function () {
 
-            var tokenizer = require('../node-ft/Parser').newTokenizer("OR");
+            var tokenizer = require('../Parser').newTokenizer("OR");
 
             var token = tokenizer.next();
 
@@ -453,7 +453,7 @@ describe("basic", function() {
 
         it("should read an operator (with peek)", function () {
 
-            var tokenizer = require('../node-ft/Parser').newTokenizer("or");
+            var tokenizer = require('../Parser').newTokenizer("or");
 
             var token = tokenizer.peek();
 
@@ -468,7 +468,7 @@ describe("basic", function() {
 
         it("should read and hit eof()", function () {
 
-            var tokenizer = require('../node-ft/Parser').newTokenizer("or this and that");
+            var tokenizer = require('../Parser').newTokenizer("or this and that");
 
             expect(tokenizer.eof()).to.equal(false);
 
@@ -485,7 +485,7 @@ describe("basic", function() {
 
         it ("parse a simple two word expression", function () {
 
-            var parser = require('../node-ft/Parser').newParser("this that");
+            var parser = require('../Parser').newParser("this that");
 
             var ast = parser.parse();
 
@@ -496,7 +496,7 @@ describe("basic", function() {
 
         it ("parse a one word expression", function () {
 
-            var parser = require('../node-ft/Parser').newParser("this");
+            var parser = require('../Parser').newParser("this");
 
             var ast = parser.parse();
 
@@ -507,7 +507,7 @@ describe("basic", function() {
 
         it ("should parse a three word expression", function () {
 
-            var parser = require('../node-ft/Parser').newParser("this we that");
+            var parser = require('../Parser').newParser("this we that");
 
             var ast = parser.parse();
 
@@ -518,7 +518,7 @@ describe("basic", function() {
 
         it ("parse a simple group", function () {
 
-            var parser = require('../node-ft/Parser').newParser("(this that three) (another)");
+            var parser = require('../Parser').newParser("(this that three) (another)");
 
             var ast = parser.parse();
 
@@ -532,7 +532,7 @@ describe("basic", function() {
 
         it ("parse a simple or", function () {
 
-            var parser = require('../node-ft/Parser').newParser("this or that");
+            var parser = require('../Parser').newParser("this or that");
 
             var ast = parser.parse();
 
@@ -546,7 +546,7 @@ describe("basic", function() {
 
         it ("multiple groups", function () {
 
-            var parser = require('../node-ft/Parser').newParser("(this) (that)");
+            var parser = require('../Parser').newParser("(this) (that)");
 
             var ast = parser.parse();
 
@@ -560,7 +560,7 @@ describe("basic", function() {
 
         it ("multiple groups with OR", function () {
 
-            var parser = require('../node-ft/Parser').newParser("(this) or (that)");
+            var parser = require('../Parser').newParser("(this) or (that)");
 
             var ast = parser.parse();
 
@@ -574,7 +574,7 @@ describe("basic", function() {
 
         it ("multiple OR (this or or that)", function () {
 
-            var parser = require('../node-ft/Parser').newParser("this or or or that");
+            var parser = require('../Parser').newParser("this or or or that");
 
             var ast = parser.parse();
 
@@ -589,7 +589,7 @@ describe("basic", function() {
 
         it ("operator with no right ('this or')", function () {
 
-            var parser = require('../node-ft/Parser').newParser("this or");
+            var parser = require('../Parser').newParser("this or");
 
             var ast = parser.parse();
 
@@ -600,7 +600,7 @@ describe("basic", function() {
 
         it ("operator with no left ('or this')", function () {
 
-            var parser = require('../node-ft/Parser').newParser("or or this");
+            var parser = require('../Parser').newParser("or or this");
 
             var ast = parser.parse();
 
@@ -611,7 +611,7 @@ describe("basic", function() {
 
         it ("operator with no left (nested in sub-group) 'this (or that)'", function () {
 
-            var parser = require('../node-ft/Parser').newParser("this (or that)");
+            var parser = require('../Parser').newParser("this (or that)");
 
             var ast = parser.parse();
 
@@ -631,7 +631,7 @@ describe("basic", function() {
 
         it ("quotes should be ignored or treated as separators?", function () {
 
-            var parser = require('../node-ft/Parser').newParser("you're=d");
+            var parser = require('../Parser').newParser("you're=d");
 
             var ast = parser.parse();
 
@@ -644,7 +644,7 @@ describe("basic", function() {
 
         it ("more complex expression with multiple and´s and subgroups", function () {
 
-            var parser = require('../node-ft/Parser').newParser("this or (one and (three or four or five))");
+            var parser = require('../Parser').newParser("this or (one and (three or four or five))");
 
             var ast = parser.parse();
 
@@ -657,7 +657,7 @@ describe("basic", function() {
 
         it ("Split some text into words for indexing", function () {
 
-            var parser = require('../node-ft/Parser').newParser("this,is some text that's good");
+            var parser = require('../Parser').newParser("this,is some text that's good");
 
             var words = parser.split();
 

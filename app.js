@@ -7,7 +7,7 @@
     var input = "";
 
     // create the FT engine
-    var engine = require("./node-ft");
+    var engine = require("./");
 
     while (input != "exit") {
 
