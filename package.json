@@ -1,12 +1,14 @@
 {
   "name": "node-ft",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "url" : "https://github.com/ant-fx/node-ft",
   "email" : "info@antfx.com",
   "author" : "Mike Davies",
   "license": "GPL",
   "keywords": [
-    "full-text"
+    "full-text",
+    "index",
+    "search"
   ],
   "main": "index.js",
   "description" : "In-memory Full-Text search engine for nodejs",
