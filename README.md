@@ -7,7 +7,7 @@ Node-FT adds basic in-memory Full-Text search capabilities to NodeJS
 Basic Usage
 
 ```javascript
-var ftIndex= require('./node-ft');
+var ftIndex= require('node-ft');
 
 ftIndex.index('1', "this is some text");
 ftIndex.index('2', "this is some more text");
