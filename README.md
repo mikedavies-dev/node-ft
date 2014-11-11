@@ -7,7 +7,7 @@ Node-FT adds basic in-memory Full-Text search capabilities to Node. Supporting:
 - Results Sorting
 - <strong>AND</strong> / <strong>OR</strong> Operations
 - Nested Expresions: ```First and (whole or world or (another word))```
-
+ 
 =======
 
 Installation
@@ -15,6 +15,8 @@ Installation
 ```
 npm install node-ft
 ```
+
+[![NPM](https://nodei.co/npm/node-ft.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/node-ft/)
 
 =======
 Basic Usage
