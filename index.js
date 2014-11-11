@@ -1,4 +1,4 @@
-(function (module) {
+var FTIndex = function () {
 
     var _ = require('underscore');
     var _parser = require('./Parser');
@@ -11,7 +11,7 @@
 
     var _documents = {};
 
-    module.index= function (id, text, document) {
+    this.index= function (id, text, document) {
 
         // attempt to delete any existing document
         this.delete(id);
@@ -47,7 +47,7 @@
         };
     }
 
-    module.delete = function (id) {
+    this.delete = function (id) {
 
         if (_documents[id] == null)
             return;
@@ -72,7 +72,7 @@
         delete _documents[id];
     }
 
-    module.execOperatorNode = function (node) {
+    this.execOperatorNode = function (node) {
 
         var left = this.execNode(node.left);
         var right = [];
@@ -90,7 +90,7 @@
         }
     }
 
-    module.execNode = function (node) {
+    this.execNode = function (node) {
 
         switch  (node.type) {
             case "word":
@@ -115,7 +115,7 @@
         }
     }
 
-    module.search = function(text, sortBy) {
+    this.search = function(text, sortBy) {
 
         if (_ignoreCase)
             text = text.toLowerCase();
@@ -147,7 +147,7 @@
         return ret;
     }
 
-    module.lookup = function (part) {
+    this.lookup = function (part) {
 
         if (_parts == null)
             return null;
@@ -155,17 +155,20 @@
         return _parts[part];
     }
 
-    module.setIgnoreCase = function (ignore) {
+    this.setIgnoreCase = function (ignore) {
         _ignoreCase = ignore;
     }
 
-    module.count = function () {
+    this.count = function () {
         return _.size(_documents);
     }
 
-    module.clear = function () {
+    this.clear = function () {
         _parts = {};
         _documents= {};
     }
+};
 
-})(module.exports);
+module.exports = function () {
+    return new FTIndex();
+};

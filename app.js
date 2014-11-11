@@ -7,7 +7,7 @@
     var input = "";
 
     // create the FT engine
-    var engine = require("./");
+    var engine = require("./").create();
 
     while (input != "exit") {
 

@@ -2,11 +2,10 @@ var expect = require("chai").expect;
 var _ = require('underscore');
 
 var newEngine = function () {
-    var ftEngine = require('../');
 
-    ftEngine.clear();
+    var nodeFT = require('../');
 
-    return ftEngine;
+    return nodeFT();
 }
 
 describe("basic", function() {
@@ -488,7 +487,7 @@ describe("basic", function() {
 
             expect(tokenizer.next().value).to.equal("or");
             expect(tokenizer.next().value).to.equal("this");
-            
+
             expect(tokenizer.eof()).to.equal(true);
         });
     });

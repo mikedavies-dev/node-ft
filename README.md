@@ -20,25 +20,27 @@ npm install node-ft
 Basic Usage
 
 ```javascript
-var ftIndex= require('node-ft');
+var nodeFT= require('node-ft');
 
-ftIndex.index('1', "this is some text");
-ftIndex.index('2', "this is some more text");
+var inx = nodeFT();
 
-var docs = ftIndex.search("this");
+inx.index('1', "this is some text");
+inx.index('2', "this is some more text");
+
+var docs = inx.search("this");
 ```
 
 Document storage
 
 ```javascript
 
-ftIndex.index('1', "this is some text", 
+inx.index('1', "this is some text",
 { 
     value: 12,
     some: 'this is a doc' 
 });
 
-var docs = ftIndex.search("this");
+var docs = inx.search("this");
 
 console.log(docs[0].doc.value);
 
@@ -48,7 +50,7 @@ Sort Results
 
 ```javascript
 
-var docs = ftIndex.search("this", function(result) {
+var docs = inx.search("this", function(result) {
     return result.doc.sort;
 });
 ```
@@ -57,7 +59,7 @@ Delete Document
 
 ```javascript
 
-ftIndex.delete('2');
+inx.delete('2');
 
 ```
 
@@ -65,7 +67,7 @@ OR expressions
 
 ```javascript
 
-var docs = ftIndex.search("this or that", function(result) {
+var docs = inx.search("this or that", function(result) {
     return result.doc.sort;
 });
 
@@ -75,7 +77,7 @@ Nested Expressions
 
 ```javascript
 
-var docs = ftIndex.search("this or (that and other)", function(result) {
+var docs = inx.search("this or (that and other)", function(result) {
     return result.doc.sort;
 });
 
@@ -85,7 +87,7 @@ Clear Index
 
 ```javascript
 
-ftIndex.clear();
+inx.clear();
 
 ```
 
@@ -93,7 +95,7 @@ Get Document Count
 
 ```javascript
 
-var docCount = ftIndex.count();
+var docCount = inx.count();
 
 ```
 
