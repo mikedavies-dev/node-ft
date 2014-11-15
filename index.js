@@ -28,7 +28,7 @@ var FTIndex = function () {
 
         parts.forEach(function (item) {
 
-            if (_parts[item] == null)
+            if (!_.has(_parts, item))
                 _parts[item] = {
                     documents: []
                 };
