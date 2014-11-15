@@ -676,4 +676,14 @@ describe("basic", function() {
             expect(words.length).to.equal(7);
         });
     });
+   it ("Handle special words", function () {
+
+        var ftIndex= newEngine();
+
+       ftIndex.index('1', "constructor is some word");
+
+       var ids1 = ftIndex.search("constructor");
+       expect(ids1.length).to.equal(1);
+
+    });
 });
