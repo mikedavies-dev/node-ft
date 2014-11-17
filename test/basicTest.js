@@ -675,15 +675,16 @@ describe("basic", function() {
             // top level token should be or
             expect(words.length).to.equal(7);
         });
-    });
-   it ("Handle special words", function () {
 
-        var ftIndex= newEngine();
+        it ("Handle special words", function () {
 
-       ftIndex.index('1', "constructor is some word");
+            var ftIndex= newEngine();
 
-       var ids1 = ftIndex.search("constructor");
-       expect(ids1.length).to.equal(1);
+            ftIndex.index('1', "constructor is some word");
 
+            var ids1 = ftIndex.search("constructor");
+            expect(ids1.length).to.equal(1);
+
+        });
     });
 });
